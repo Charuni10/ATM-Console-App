@@ -9,7 +9,7 @@ class ATM:
         self.amount=[5000,18765,45672]
         self.password=5234
         self.deno={2000:0,500:0,200:0,100:0}
-
+        self.bal=0
 atm = ATM()
 
 

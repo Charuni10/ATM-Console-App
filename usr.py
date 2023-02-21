@@ -1,4 +1,7 @@
 
+import io
+
+
 def usr(atm):
     username=input("Enter the username : ")
     s=[]
@@ -23,26 +26,27 @@ def usr(atm):
                     print("The balance amount in the account is ",atm.amount[n])
 
                 elif(us==2):
-        #                 print(amount[n])
-                    withd_2000=int(input("Please enter the 2000 rupees notes you need to withdraw :"))
-                    withd_500=int(input("Please enter the 500 rupees notes you need to withdraw :"))
-                    withd_200=int(input("Please enter the 200 rupees notes you need to withdraw :"))
-                    withd_100=int(input("Please enter the 100 rupees notes you need to withdraw :"))
-                    tot=withd_2000*2000+withd_500*500+withd_200*200+withd_100*100
-        #                 print(tot)
-                    if(tot<=atm.amount[n]-atm.min_bal):
-                        if(atm.deno[2000]-withd_2000<0 or atm.deno[500]-withd_500<0 or atm.deno[200]-withd_200<0 or atm.deno[100]-withd_100<0):
-                            print("The notes are not available in the atm, sorry")
-                        else:
-                            atm.deno[2000]-=withd_2000
-                            atm.deno[500]-=withd_500
-                            atm.deno[200]-=withd_200
-                            atm.deno[100]-=withd_100
-                            atm.amount[n]-=tot
+                    withd=int(input("Enter the amount to be withdrawn : "))
+                    copy_withd=withd
+                    copy_deno=atm.deno.copy()
+                    copy_amount=atm.amount.copy()
+                    if copy_withd<=(atm.amount[n]-atm.min_bal) and copy_withd%100==0:
+                        for i in copy_deno.keys():
+                            c=copy_withd//i
+                            if(c<=copy_deno[i]):
+                                copy_withd=copy_withd%i
+                                copy_deno[i]-=c
+                                copy_amount-=copy_deno[i]*c
+                        if(copy_withd==0):
+                            atm.deno=copy_deno
+                            atm.amount[n]=copy_amount
+                            atm.bal-=withd
                             print("The amount is successfully withdrawed")
                             print("The account balance is ",atm.amount[n])
-                            pri="The amount is successfully withdrawed is",tot
+                            pri="The amount is successfully withdrawed is",withd
                             s.append(pri)
+                        else:
+                            print("The amount you have entered is not available in the ATM")           
                     else:
                         print("The amount you have entered exceeds the main balance ")
                 elif(us==3):
@@ -72,6 +76,7 @@ def usr(atm):
                         atm.deno[200]+=dep_200
                         atm.deno[100]+=dep_100
                         atm.amount[n]+=dep
+                        atm.bal+=dep
                         print("The amount is successfully deposited")
                         print("The account balance is ",atm.amount[n])
                         pri="The amount is successfully deposited is",dep
